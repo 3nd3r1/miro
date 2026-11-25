@@ -1,0 +1,38 @@
+version: "2"
+
+linters:
+  default: standard
+  enable:
+    - funlen
+    - gocognit
+    - nestif
+    - dupl
+    - misspell
+    - errorlint
+    - unparam
+    - nakedret
+    - gocritic
+  settings:
+    errcheck:
+      exclude-functions:
+        - fmt.Fprint
+        - fmt.Fprintf
+        - fmt.Fprintln
+    funlen:
+      lines: 60
+      statements: 40
+    gocognit:
+      min-complexity: 20
+    nestif:
+      min-complexity: 4
+    dupl:
+      threshold: 120
+  exclusions:
+    rules:
+      - path: _test\.go
+        linters: [funlen, dupl, gocognit]
+
+formatters:
+  enable:
+    - gofmt
+    - goimports
