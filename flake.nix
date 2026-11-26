@@ -11,6 +11,7 @@
       system = "x86_64-linux";
       pkgs = import nixpkgs { inherit system; };
       lib = pkgs.lib;
+      models = import ./nix/models.nix { inherit pkgs; };
 
       goSrc = lib.fileset.toSource {
         root = ./.;
@@ -43,6 +44,24 @@
       };
 
       nixosModules.inference = ./nix/modules/inference.nix;
+
+      nixosConfigurations.site-a = nixpkgs.lib.nixosSystem {
+        inherit system;
+        modules = [
+          ./nix/sites/site-a.nix
+          {
+            fileSystems."/" = {
+              device = lib.mkDefault "/dev/vda";
+              fsType = lib.mkDefault "ext4";
+            };
+            boot.loader.grub.enable = lib.mkDefault false;
+          }
+        ];
+      };
+
+      checks.${system}.site-a-smoke = import ./nix/tests/smoke.nix {
+        inherit pkgs models;
+      };
 
       devShells.${system}.default = import ./shell.nix { inherit pkgs; };
     };
