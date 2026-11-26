@@ -42,6 +42,8 @@
         miro-agent = mkGoBinary "miro-agent" "cmd/miro-agent";
       };
 
+      nixosModules.inference = ./nix/modules/inference.nix;
+
       devShells.${system}.default = import ./shell.nix { inherit pkgs; };
     };
 }
