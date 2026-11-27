@@ -36,8 +36,13 @@
         ];
       };
 
-      checks.${system}.site-a-smoke = import ./nix/tests/smoke.nix {
-        inherit pkgs models;
+      checks.${system} = {
+        site-a-smoke = import ./nix/tests/smoke.nix {
+          inherit pkgs models;
+        };
+        e2e-loop = import ./nix/tests/e2e.nix {
+          inherit pkgs models miroPackages;
+        };
       };
 
       devShells.${system}.default = import ./shell.nix { inherit pkgs; };

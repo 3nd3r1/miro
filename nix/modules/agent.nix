@@ -83,6 +83,8 @@ in
 
     # Air-gapped site: disable all remote substituters.
     # Unsigned m-1 bundles use require-sigs = false; m-2 enables signature verification.
+    system.switch.enable = true;
+
     nix.settings = {
       substituters = lib.mkForce [ ];
       trusted-substituters = lib.mkForce [ ];
