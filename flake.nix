@@ -18,6 +18,7 @@
         fileset = lib.fileset.unions [
           ./go.mod
           ./cmd
+          ./internal
         ];
       };
 
