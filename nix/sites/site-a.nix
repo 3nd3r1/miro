@@ -1,6 +1,7 @@
 { ... }:
 {
   imports = [
+    ../modules/agent.nix
     ../modules/inference.nix
   ];
 
@@ -12,6 +13,11 @@
   };
 
   services.timesyncd.enable = false;
+
+  miro.agent = {
+    enable = true;
+    siteId = "site-a";
+  };
 
   miro.inference = {
     enable = true;

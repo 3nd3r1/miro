@@ -12,39 +12,15 @@
       pkgs = import nixpkgs { inherit system; };
       lib = pkgs.lib;
       models = import ./nix/models.nix { inherit pkgs; };
-
-      goSrc = lib.fileset.toSource {
-        root = ./.;
-        fileset = lib.fileset.unions [
-          ./go.mod
-          ./cmd
-          ./internal
-        ];
-      };
-
-      mkGoBinary =
-        name: subPackage:
-        pkgs.buildGoModule {
-          pname = name;
-          version = "0.1.0";
-          src = goSrc;
-          vendorHash = null;
-          subPackages = [ subPackage ];
-          env.CGO_ENABLED = 0;
-          ldflags = [
-            "-s"
-            "-w"
-            "-X main.version=0.1.0"
-          ];
-        };
+      miroPackages = import ./nix/packages.nix { inherit pkgs; };
     in
     {
-      packages.${system} = {
-        miro = mkGoBinary "miro" "cmd/miro";
-        miro-agent = mkGoBinary "miro-agent" "cmd/miro-agent";
-      };
+      packages.${system} = miroPackages;
 
-      nixosModules.inference = ./nix/modules/inference.nix;
+      nixosModules = {
+        agent = ./nix/modules/agent.nix;
+        inference = ./nix/modules/inference.nix;
+      };
 
       nixosConfigurations.site-a = nixpkgs.lib.nixosSystem {
         inherit system;
